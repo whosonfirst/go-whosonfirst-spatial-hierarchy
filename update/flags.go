@@ -46,12 +46,12 @@ func NewUpdateApplicationFlagSet(ctx context.Context) (*flag.FlagSet, error) {
 
 	fs.StringVar(&mapshaper_server, "mapshaper-server", "http://localhost:8080", "A valid HTTP URI pointing to a sfomuseum/go-sfomuseum-mapshaper server endpoint.")
 
-	fs.Var(&is_current, "is-current", "One or more existential fss (-1, 0, 1) to filter PIP results.")
-	fs.Var(&is_ceased, "is-ceased", "One or more existential fss (-1, 0, 1) to filter PIP results.")
-	fs.Var(&is_deprecated, "is-deprecated", "One or more existential fss (-1, 0, 1) to filter PIP results.")
-	fs.Var(&is_superseded, "is-superseded", "One or more existential fss (-1, 0, 1) to filter PIP results.")
+	fs.Var(&is_current, "is-current", "One or more existential flags (-1, 0, 1) to filter PIP results.")
+	fs.Var(&is_ceased, "is-ceased", "One or more existential flags (-1, 0, 1) to filter PIP results.")
+	fs.Var(&is_deprecated, "is-deprecated", "One or more existential flags (-1, 0, 1) to filter PIP results.")
+	fs.Var(&is_superseded, "is-superseded", "One or more existential flags (-1, 0, 1) to filter PIP results.")
 
-	fs.Var(&is_superseding, "is-superseding", "One or more existential fss (-1, 0, 1) to filter PIP results.")
+	fs.Var(&is_superseding, "is-superseding", "One or more existential flags (-1, 0, 1) to filter PIP results.")
 
 	fs.Usage = func() {
 		fmt.Fprintf(os.Stderr, "Perform point-in-polygon (PIP), and related update, operations on a set of Who's on First records.\n")
