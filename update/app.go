@@ -37,7 +37,7 @@ type UpdateApplicationOptions struct {
 	FromIterator       string
 	SPRFilterInputs    *filter.SPRInputs
 	SPRResultsFunc     hierarchy.FilterSPRResultsFunc                      // This one chooses one result among many (or nil)
-	PIPUpdateFunc      hierarchy.PointInPolygonHierarchyToolUpdateCallback // This one constructs a map[string]interface{} to update the target record (or not)
+	PIPUpdateFunc      hierarchy.PointInPolygonHierarchyResolverUpdateCallback // This one constructs a map[string]interface{} to update the target record (or not)
 }
 
 type UpdateApplicationPaths struct {
@@ -48,13 +48,13 @@ type UpdateApplicationPaths struct {
 type UpdateApplication struct {
 	to                  string
 	from                string
-	tool                *hierarchy.PointInPolygonHierarchyTool
+	tool                *hierarchy.PointInPolygonHierarchyResolver
 	writer              writer.Writer
 	exporter            export.Exporter
 	spatial_db          database.SpatialDatabase
 	sprResultsFunc      hierarchy.FilterSPRResultsFunc
 	sprFilterInputs     *filter.SPRInputs
-	hierarchyUpdateFunc hierarchy.PointInPolygonHierarchyToolUpdateCallback
+	hierarchyUpdateFunc hierarchy.PointInPolygonHierarchyResolverUpdateCallback
 }
 
 func NewUpdateApplicationOptionsFromFlagSet(ctx context.Context, fs *flag.FlagSet) (*UpdateApplicationOptions, *UpdateApplicationPaths, error) {
@@ -165,10 +165,10 @@ func NewUpdateApplication(ctx context.Context, opts *UpdateApplicationOptions) (
 	update_cb := opts.PIPUpdateFunc
 
 	if update_cb == nil {
-		update_cb = hierarchy.DefaultPointInPolygonHierarchyToolUpdateCallback()
+		update_cb = hierarchy.DefaultPointInPolygonHierarchyResolverUpdateCallback()
 	}
 
-	tool, err := hierarchy.NewPointInPolygonHierarchyTool(ctx, spatial_db, ms_client)
+	tool, err := hierarchy.NewPointInPolygonHierarchyResolver(ctx, spatial_db, ms_client)
 
 	if err != nil {
 		return nil, fmt.Errorf("Failed to create PIP tool, %v", err)

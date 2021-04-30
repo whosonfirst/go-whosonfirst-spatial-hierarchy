@@ -19,14 +19,16 @@ import (
 	"strconv"
 )
 
-type PointInPolygonHierarchyTool struct {
+// PointInPolygonHierarchyResolver provides methods for constructing a hierarchy of ancestors
+// for a given point, following rules established by the Who's On First project.
+type PointInPolygonHierarchyResolver struct {
 	Database  database.SpatialDatabase
 	Mapshaper *mapshaper.Client
 }
 
-type PointInPolygonHierarchyToolUpdateCallback func(context.Context, reader.Reader, spr.StandardPlacesResult) (map[string]interface{}, error)
+type PointInPolygonHierarchyResolverUpdateCallback func(context.Context, reader.Reader, spr.StandardPlacesResult) (map[string]interface{}, error)
 
-func DefaultPointInPolygonHierarchyToolUpdateCallback() PointInPolygonHierarchyToolUpdateCallback {
+func DefaultPointInPolygonHierarchyResolverUpdateCallback() PointInPolygonHierarchyResolverUpdateCallback {
 
 	fn := func(ctx context.Context, r reader.Reader, parent_spr spr.StandardPlacesResult) (map[string]interface{}, error) {
 
@@ -68,9 +70,9 @@ func DefaultPointInPolygonHierarchyToolUpdateCallback() PointInPolygonHierarchyT
 	return fn
 }
 
-func NewPointInPolygonHierarchyTool(ctx context.Context, spatial_db database.SpatialDatabase, ms_client *mapshaper.Client) (*PointInPolygonHierarchyTool, error) {
+func NewPointInPolygonHierarchyResolver(ctx context.Context, spatial_db database.SpatialDatabase, ms_client *mapshaper.Client) (*PointInPolygonHierarchyResolver, error) {
 
-	t := &PointInPolygonHierarchyTool{
+	t := &PointInPolygonHierarchyResolver{
 		Database:  spatial_db,
 		Mapshaper: ms_client,
 	}
@@ -78,7 +80,7 @@ func NewPointInPolygonHierarchyTool(ctx context.Context, spatial_db database.Spa
 	return t, nil
 }
 
-func (t *PointInPolygonHierarchyTool) PointInPolygonAndUpdate(ctx context.Context, inputs *filter.SPRInputs, results_cb FilterSPRResultsFunc, update_cb PointInPolygonHierarchyToolUpdateCallback, body []byte) ([]byte, error) {
+func (t *PointInPolygonHierarchyResolver) PointInPolygonAndUpdate(ctx context.Context, inputs *filter.SPRInputs, results_cb FilterSPRResultsFunc, update_cb PointInPolygonHierarchyResolverUpdateCallback, body []byte) ([]byte, error) {
 
 	possible, err := t.PointInPolygon(ctx, inputs, body)
 
@@ -110,7 +112,7 @@ func (t *PointInPolygonHierarchyTool) PointInPolygonAndUpdate(ctx context.Contex
 	return body, nil
 }
 
-func (t *PointInPolygonHierarchyTool) PointInPolygon(ctx context.Context, inputs *filter.SPRInputs, body []byte) ([]spr.StandardPlacesResult, error) {
+func (t *PointInPolygonHierarchyResolver) PointInPolygon(ctx context.Context, inputs *filter.SPRInputs, body []byte) ([]spr.StandardPlacesResult, error) {
 
 	pt_rsp := gjson.GetBytes(body, "properties.wof:placetype")
 
@@ -187,7 +189,8 @@ func (t *PointInPolygonHierarchyTool) PointInPolygon(ctx context.Context, inputs
 	return possible, nil
 }
 
-func (t *PointInPolygonHierarchyTool) PointInPolygonCentroid(ctx context.Context, body []byte) (*orb.Point, error) {
+// PointInPolygonCentroid derives an *orb.Point (or "centroid") to use for point-in-polygon operations.
+func (t *PointInPolygonHierarchyResolver) PointInPolygonCentroid(ctx context.Context, body []byte) (*orb.Point, error) {
 
 	f, err := geojson.UnmarshalFeature(body)
 
