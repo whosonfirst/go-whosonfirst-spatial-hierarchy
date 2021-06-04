@@ -3,6 +3,7 @@ module github.com/whosonfirst/go-whosonfirst-spatial-hierarchy
 go 1.16
 
 require (
+	github.com/aaronland/go-roster v0.0.2
 	github.com/paulmach/orb v0.2.1
 	github.com/sfomuseum/go-edtf v0.2.3
 	github.com/sfomuseum/go-flags v0.8.2

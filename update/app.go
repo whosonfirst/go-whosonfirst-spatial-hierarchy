@@ -36,7 +36,7 @@ type UpdateApplicationOptions struct {
 	ToIterator         string
 	FromIterator       string
 	SPRFilterInputs    *filter.SPRInputs
-	SPRResultsFunc     hierarchy.FilterSPRResultsFunc                      // This one chooses one result among many (or nil)
+	SPRResultsFunc     hierarchy.FilterSPRResultsFunc                          // This one chooses one result among many (or nil)
 	PIPUpdateFunc      hierarchy.PointInPolygonHierarchyResolverUpdateCallback // This one constructs a map[string]interface{} to update the target record (or not)
 }
 
