@@ -13,6 +13,7 @@ import (
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/properties/whosonfirst"
 	"github.com/whosonfirst/go-whosonfirst-placetypes"
 	wof_reader "github.com/whosonfirst/go-whosonfirst-reader"
+	"github.com/whosonfirst/go-whosonfirst-spatial-hierarchy/filter"	
 	"github.com/whosonfirst/go-whosonfirst-spatial/database"
 	"github.com/whosonfirst/go-whosonfirst-spatial/filter"
 	"github.com/whosonfirst/go-whosonfirst-spr/v2"
@@ -80,7 +81,7 @@ func NewPointInPolygonHierarchyResolver(ctx context.Context, spatial_db database
 	return t, nil
 }
 
-func (t *PointInPolygonHierarchyResolver) PointInPolygonAndUpdate(ctx context.Context, inputs *filter.SPRInputs, results_cb FilterSPRResultsFunc, update_cb PointInPolygonHierarchyResolverUpdateCallback, body []byte) ([]byte, error) {
+func (t *PointInPolygonHierarchyResolver) PointInPolygonAndUpdate(ctx context.Context, inputs *filter.SPRInputs, results_f filter.SPRResultsFilter, update_cb PointInPolygonHierarchyResolverUpdateCallback, body []byte) ([]byte, error) {
 
 	possible, err := t.PointInPolygon(ctx, inputs, body)
 
@@ -88,7 +89,7 @@ func (t *PointInPolygonHierarchyResolver) PointInPolygonAndUpdate(ctx context.Co
 		return nil, err
 	}
 
-	parent_spr, err := results_cb(ctx, t.Database, body, possible)
+	parent_spr, err := results_f.FilterResults(ctx, t.Database, body, possible)
 
 	if err != nil {
 		return nil, err

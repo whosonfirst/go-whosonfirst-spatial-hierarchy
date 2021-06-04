@@ -3,8 +3,8 @@ package filter
 import (
 	"context"
 	"fmt"
-	"github.com/whosonsingle/go-reader"
-	"github.com/whosonsingle/go-whosonsingle-spr/v2"
+	"github.com/whosonfirst/go-reader"
+	"github.com/whosonfirst/go-whosonfirst-spr/v2"
 )
 
 type SingleSPRResultsFilter struct {

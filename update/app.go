@@ -17,6 +17,7 @@ import (
 	"github.com/whosonfirst/go-whosonfirst-iterate/iterator"
 	wof_reader "github.com/whosonfirst/go-whosonfirst-reader"
 	"github.com/whosonfirst/go-whosonfirst-spatial-hierarchy"
+	"github.com/whosonfirst/go-whosonfirst-spatial-hierarchy/filter"	
 	"github.com/whosonfirst/go-whosonfirst-spatial/database"
 	"github.com/whosonfirst/go-whosonfirst-spatial/filter"
 	wof_writer "github.com/whosonfirst/go-whosonfirst-writer"
@@ -36,7 +37,7 @@ type UpdateApplicationOptions struct {
 	ToIterator         string
 	FromIterator       string
 	SPRFilterInputs    *filter.SPRInputs
-	SPRResultsFunc     hierarchy.FilterSPRResultsFunc                          // This one chooses one result among many (or nil)
+	SPRResultsFilter     filter.SPRResultsFilter
 	PIPUpdateFunc      hierarchy.PointInPolygonHierarchyResolverUpdateCallback // This one constructs a map[string]interface{} to update the target record (or not)
 }
 
@@ -52,7 +53,7 @@ type UpdateApplication struct {
 	writer              writer.Writer
 	exporter            export.Exporter
 	spatial_db          database.SpatialDatabase
-	sprResultsFunc      hierarchy.FilterSPRResultsFunc
+	sprResultsFilter    filter.SPRResultsFilter
 	sprFilterInputs     *filter.SPRInputs
 	hierarchyUpdateFunc hierarchy.PointInPolygonHierarchyResolverUpdateCallback
 }
@@ -74,7 +75,7 @@ func NewUpdateApplicationOptionsFromFlagSet(ctx context.Context, fs *flag.FlagSe
 		ExporterURI:        exporter_uri,
 		SpatialDatabaseURI: spatial_database_uri,
 		MapshaperServerURI: mapshaper_server,
-		SPRResultsFunc:     hierarchy.FirstButForgivingSPRResultsFunc, // sudo make me configurable
+		SPRResultsFilter:   filter.SPRResultsFilter,
 		SPRFilterInputs:    inputs,
 		ToIterator:         iterator_uri,
 		FromIterator:       spatial_iterator_uri,
@@ -182,7 +183,7 @@ func NewUpdateApplication(ctx context.Context, opts *UpdateApplicationOptions) (
 		exporter:            ex,
 		writer:              wr,
 		sprFilterInputs:     opts.SPRFilterInputs,
-		sprResultsFunc:      opts.SPRResultsFunc,
+		sprResultsFilter:      opts.SPRResultsFilter,
 		hierarchyUpdateFunc: update_cb,
 	}
 
@@ -292,7 +293,7 @@ func (app *UpdateApplication) UpdateAndPublishFeature(ctx context.Context, body 
 
 func (app *UpdateApplication) UpdateFeature(ctx context.Context, body []byte) ([]byte, error) {
 
-	return app.tool.PointInPolygonAndUpdate(ctx, app.sprFilterInputs, app.sprResultsFunc, app.hierarchyUpdateFunc, body)
+	return app.tool.PointInPolygonAndUpdate(ctx, app.sprFilterInputs, app.sprResultsFilter, app.hierarchyUpdateFunc, body)
 }
 
 func (app *UpdateApplication) PublishFeature(ctx context.Context, body []byte) ([]byte, error) {
