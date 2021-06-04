@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"github.com/whosonfirst/go-whosonfirst-spatial-hierarchy/update"
+	"github.com/whosonfirst/go-whosonfirst-spatial-hierarchy/application/update"
 	"log"
 )
 

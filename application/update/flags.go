@@ -16,6 +16,8 @@ var writer_uri string
 var spatial_database_uri string
 var spatial_iterator_uri string
 
+var results_filter_uri string
+
 var spatial_paths multi.MultiString
 
 var mapshaper_server string
@@ -37,6 +39,8 @@ func NewUpdateApplicationFlagSet(ctx context.Context) (*flag.FlagSet, error) {
 
 	fs.StringVar(&spatial_database_uri, "spatial-database-uri", "", "A valid whosonfirst/go-whosonfirst-spatial URI. This is the database of spatial records that will for PIP-ing.")
 
+	fs.StringVar(&results_filter_uri, "results-filter-uri", "first://", "...")
+	
 	fs.StringVar(&spatial_iterator_uri, "spatial-iterator-uri", "repo://", "A valid whosonfirst/go-whosonfirst-iterate/emitter URI scheme. This is used to identify WOF records to be indexed in the spatial database.")
 
 	fs.Var(&spatial_paths, "spatial-source", "One or more URIs to be indexed in the spatial database (used for PIP-ing).")

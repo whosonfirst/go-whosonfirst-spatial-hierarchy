@@ -17,7 +17,7 @@ import (
 	"github.com/whosonfirst/go-whosonfirst-iterate/iterator"
 	wof_reader "github.com/whosonfirst/go-whosonfirst-reader"
 	"github.com/whosonfirst/go-whosonfirst-spatial-hierarchy"
-	"github.com/whosonfirst/go-whosonfirst-spatial-hierarchy/filter"	
+	hier_filter "github.com/whosonfirst/go-whosonfirst-spatial-hierarchy/filter"
 	"github.com/whosonfirst/go-whosonfirst-spatial/database"
 	"github.com/whosonfirst/go-whosonfirst-spatial/filter"
 	wof_writer "github.com/whosonfirst/go-whosonfirst-writer"
@@ -37,7 +37,7 @@ type UpdateApplicationOptions struct {
 	ToIterator         string
 	FromIterator       string
 	SPRFilterInputs    *filter.SPRInputs
-	SPRResultsFilter     filter.SPRResultsFilter
+	SPRResultsFilter   hier_filter.SPRResultsFilter
 	PIPUpdateFunc      hierarchy.PointInPolygonHierarchyResolverUpdateCallback // This one constructs a map[string]interface{} to update the target record (or not)
 }
 
@@ -53,7 +53,7 @@ type UpdateApplication struct {
 	writer              writer.Writer
 	exporter            export.Exporter
 	spatial_db          database.SpatialDatabase
-	sprResultsFilter    filter.SPRResultsFilter
+	sprResultsFilter    hier_filter.SPRResultsFilter
 	sprFilterInputs     *filter.SPRInputs
 	hierarchyUpdateFunc hierarchy.PointInPolygonHierarchyResolverUpdateCallback
 }
@@ -70,12 +70,18 @@ func NewUpdateApplicationOptionsFromFlagSet(ctx context.Context, fs *flag.FlagSe
 	inputs.IsSuperseded = is_superseded
 	inputs.IsSuperseding = is_superseding
 
+	results_f, err := hier_filter.NewSPRResultsFilter(ctx, results_filter_uri)
+
+	if err != nil {
+		return nil, nil, fmt.Errorf("Failed to create results filter, %v", err)
+	}
+
 	opts := &UpdateApplicationOptions{
 		WriterURI:          writer_uri,
 		ExporterURI:        exporter_uri,
 		SpatialDatabaseURI: spatial_database_uri,
 		MapshaperServerURI: mapshaper_server,
-		SPRResultsFilter:   filter.SPRResultsFilter,
+		SPRResultsFilter:   results_f,
 		SPRFilterInputs:    inputs,
 		ToIterator:         iterator_uri,
 		FromIterator:       spatial_iterator_uri,
@@ -183,7 +189,7 @@ func NewUpdateApplication(ctx context.Context, opts *UpdateApplicationOptions) (
 		exporter:            ex,
 		writer:              wr,
 		sprFilterInputs:     opts.SPRFilterInputs,
-		sprResultsFilter:      opts.SPRResultsFilter,
+		sprResultsFilter:    opts.SPRResultsFilter,
 		hierarchyUpdateFunc: update_cb,
 	}
 
