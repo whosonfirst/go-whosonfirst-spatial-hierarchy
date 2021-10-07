@@ -183,6 +183,8 @@ github.com/whosonfirst/go-whosonfirst-export/v2 v2.3.5 h1:vK+KcvyMKae/OYsbwAU5LC
 github.com/whosonfirst/go-whosonfirst-export/v2 v2.3.5/go.mod h1:O/2L+z5U6TGBRiKThePlJ5/3n/TZJ9Tcu3ZybW9WB7I=
 github.com/whosonfirst/go-whosonfirst-feature v0.0.12 h1:SNZdeOhQ4XXid4g4iJ5/H6y0tU4rOGn/41M/knVgFMM=
 github.com/whosonfirst/go-whosonfirst-feature v0.0.12/go.mod h1:NhUZ9XDyqQiOipFIBvbmixwfM6jtSzP2lX5dxcWX5uw=
+github.com/whosonfirst/go-whosonfirst-feature v0.0.13 h1:97oh/+s78YhDMRA+AUPCvphXzQVOZmMBNKXitPLADlI=
+github.com/whosonfirst/go-whosonfirst-feature v0.0.13/go.mod h1:NhUZ9XDyqQiOipFIBvbmixwfM6jtSzP2lX5dxcWX5uw=
 github.com/whosonfirst/go-whosonfirst-flags v0.1.0/go.mod h1:bovMiQphaVhqemXFmNVf9Ts0tqnWtzHRFMUSKX+zTE8=
 github.com/whosonfirst/go-whosonfirst-flags v0.2.0/go.mod h1:ECd0AJJZIlybmjTGB9z+CPz9pSiMTwxur7fPKmDnoqI=
 github.com/whosonfirst/go-whosonfirst-flags v0.4.0/go.mod h1:kewFjxBiE00SqjjIanm5DPI81SYvx93wVb3ogwV/PMk=

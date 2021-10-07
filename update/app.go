@@ -10,9 +10,8 @@ import (
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
 	"github.com/whosonfirst/go-whosonfirst-export/v2"
-	"github.com/whosonfirst/go-whosonfirst-geojson-v2/feature"
-	"github.com/whosonfirst/go-whosonfirst-geojson-v2/properties/geometry"
-	"github.com/whosonfirst/go-whosonfirst-geojson-v2/properties/whosonfirst"
+	"github.com/whosonfirst/go-whosonfirst-feature/properties"		
+	"github.com/whosonfirst/go-whosonfirst-feature/geometry"	
 	"github.com/whosonfirst/go-whosonfirst-iterate/v2/iterator"
 	wof_reader "github.com/whosonfirst/go-whosonfirst-reader"
 	"github.com/whosonfirst/go-whosonfirst-spatial-hierarchy"
@@ -241,17 +240,23 @@ func (app *UpdateApplication) Run(ctx context.Context, paths *UpdateApplicationP
 
 func (app *UpdateApplication) IndexSpatialDatabase(ctx context.Context, uris ...string) error {
 
-	from_cb := func(ctx context.Context, fh io.ReadSeeker, args ...interface{}) error {
+	from_cb := func(ctx context.Context, path string, fh io.ReadSeeker, args ...interface{}) error {
 
-		f, err := feature.LoadFeatureFromReader(fh)
+		body, err := io.ReadAll(fh)
 
 		if err != nil {
-			return err
+			return fmt.Errorf("Failed to read %s, %w", path, err)
 		}
 
-		switch geometry.Type(f) {
+		geom_type, err := geometry.Type(body)
+
+		if err != nil {
+			return fmt.Errorf("Failed to derive geometry type for %s, %w", path, err)
+		}
+		
+		switch geom_type {
 		case "Polygon", "MultiPolygon":
-			return app.spatial_db.IndexFeature(ctx, f)
+			return app.spatial_db.IndexFeature(ctx, body)
 		default:
 			return nil
 		}
@@ -343,14 +348,14 @@ func (app *UpdateApplication) WranglePIP(ctx context.Context, old_body []byte, p
 
 	old_id := old_id_rsp.Int()
 
-	pip_parent_f, err := wof_reader.LoadFeatureFromID(ctx, app.spatial_db, pip_parent_id)
+	pip_parent_f, err := wof_reader.LoadBytesFromID(ctx, app.spatial_db, pip_parent_id)
 
 	if err != nil {
 		return nil, err
 	}
 
-	pip_parent_inception := whosonfirst.Inception(pip_parent_f)
-	pip_parent_hierarchy := whosonfirst.Hierarchies(pip_parent_f)
+	pip_parent_inception := properties.Inception(pip_parent_f)
+	pip_parent_hierarchy := properties.Hierarchies(pip_parent_f)
 
 	new_body = old_body
 
