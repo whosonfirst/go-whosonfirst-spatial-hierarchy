@@ -16,7 +16,7 @@ require (
 	github.com/whosonfirst/go-whosonfirst-iterate/v2 v2.0.2
 	github.com/whosonfirst/go-whosonfirst-placetypes v0.3.0
 	github.com/whosonfirst/go-whosonfirst-reader v0.3.0
-	github.com/whosonfirst/go-whosonfirst-spatial v0.3.2
+	github.com/whosonfirst/go-whosonfirst-spatial v0.3.3
 	github.com/whosonfirst/go-whosonfirst-spr/v2 v2.0.0
 	github.com/whosonfirst/go-whosonfirst-writer v0.2.6
 	github.com/whosonfirst/go-writer v0.8.0
