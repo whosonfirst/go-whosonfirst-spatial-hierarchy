@@ -10,8 +10,8 @@ import (
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
 	"github.com/whosonfirst/go-whosonfirst-export/v2"
-	"github.com/whosonfirst/go-whosonfirst-feature/properties"		
-	"github.com/whosonfirst/go-whosonfirst-feature/geometry"	
+	"github.com/whosonfirst/go-whosonfirst-feature/geometry"
+	"github.com/whosonfirst/go-whosonfirst-feature/properties"
 	"github.com/whosonfirst/go-whosonfirst-iterate/v2/iterator"
 	wof_reader "github.com/whosonfirst/go-whosonfirst-reader"
 	"github.com/whosonfirst/go-whosonfirst-spatial-hierarchy"
@@ -34,7 +34,7 @@ type UpdateApplicationOptions struct {
 	ToIterator         string
 	FromIterator       string
 	SPRFilterInputs    *filter.SPRInputs
-	SPRResultsFunc     hierarchy.FilterSPRResultsFunc                      // This one chooses one result among many (or nil)
+	SPRResultsFunc     hierarchy.FilterSPRResultsFunc                          // This one chooses one result among many (or nil)
 	PIPUpdateFunc      hierarchy.PointInPolygonHierarchyResolverUpdateCallback // This one constructs a map[string]interface{} to update the target record (or not)
 }
 
@@ -253,7 +253,7 @@ func (app *UpdateApplication) IndexSpatialDatabase(ctx context.Context, uris ...
 		if err != nil {
 			return fmt.Errorf("Failed to derive geometry type for %s, %w", path, err)
 		}
-		
+
 		switch geom_type {
 		case "Polygon", "MultiPolygon":
 			return app.spatial_db.IndexFeature(ctx, body)
@@ -279,16 +279,25 @@ func (app *UpdateApplication) IndexSpatialDatabase(ctx context.Context, uris ...
 
 func (app *UpdateApplication) UpdateAndPublishFeature(ctx context.Context, body []byte) ([]byte, error) {
 
-	new_body, err := app.UpdateFeature(ctx, body)
+	has_changed, new_body, err := app.UpdateFeature(ctx, body)
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Failed to update feature, %w", err)
 	}
 
-	return app.PublishFeature(ctx, new_body)
+	if has_changed {
+
+		new_body, err = app.PublishFeature(ctx, new_body)
+
+		if err != nil {
+			return nil, fmt.Errorf("Failed to publish feature, %w", err)
+		}
+	}
+
+	return new_body, nil
 }
 
-func (app *UpdateApplication) UpdateFeature(ctx context.Context, body []byte) ([]byte, error) {
+func (app *UpdateApplication) UpdateFeature(ctx context.Context, body []byte) (bool, []byte, error) {
 
 	return app.tool.PointInPolygonAndUpdate(ctx, app.sprFilterInputs, app.sprResultsFunc, app.hierarchyUpdateFunc, body)
 }
