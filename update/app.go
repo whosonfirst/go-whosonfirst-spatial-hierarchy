@@ -17,7 +17,7 @@ import (
 	"github.com/whosonfirst/go-whosonfirst-spatial-hierarchy"
 	"github.com/whosonfirst/go-whosonfirst-spatial/database"
 	"github.com/whosonfirst/go-whosonfirst-spatial/filter"
-	wof_writer "github.com/whosonfirst/go-whosonfirst-writer"
+	wof_writer "github.com/whosonfirst/go-whosonfirst-writer/v2"
 	"github.com/whosonfirst/go-writer"
 	"io"
 	_ "log"
@@ -310,7 +310,7 @@ func (app *UpdateApplication) PublishFeature(ctx context.Context, body []byte) (
 		return nil, err
 	}
 
-	err = wof_writer.WriteFeatureBytes(ctx, app.writer, new_body)
+	_, err = wof_writer.WriteBytes(ctx, app.writer, new_body)
 
 	if err != nil {
 		return nil, err
@@ -357,7 +357,7 @@ func (app *UpdateApplication) WranglePIP(ctx context.Context, old_body []byte, p
 
 	old_id := old_id_rsp.Int()
 
-	pip_parent_f, err := wof_reader.LoadBytesFromID(ctx, app.spatial_db, pip_parent_id)
+	pip_parent_f, err := wof_reader.LoadBytes(ctx, app.spatial_db, pip_parent_id)
 
 	if err != nil {
 		return nil, err
