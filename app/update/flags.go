@@ -35,7 +35,7 @@ func DefaultFlagSet(ctx context.Context) (*flag.FlagSet, error) {
 	fs.StringVar(&exporter_uri, "exporter-uri", "whosonfirst://", "A valid whosonfirst/go-whosonfirst-export URI.")
 	fs.StringVar(&writer_uri, "writer-uri", "null://", "A valid whosonfirst/go-writer URI. This is where updated records will be written to.")
 
-	fs.StringVar(&spatial_database_uri, "spatial-database-uri", "", "A valid whosonfirst/go-whosonfirst-spatial URI. This is the database of spatial records that will for PIP-ing.")
+	fs.StringVar(&spatial_database_uri, "spatial-database-uri", "rtree://", "A valid whosonfirst/go-whosonfirst-spatial URI. This is the database of spatial records that will for PIP-ing.")
 
 	fs.StringVar(&spatial_iterator_uri, "spatial-iterator-uri", "repo://", "A valid whosonfirst/go-whosonfirst-iterate/emitter URI scheme. This is used to identify WOF records to be indexed in the spatial database.")
 
@@ -44,7 +44,7 @@ func DefaultFlagSet(ctx context.Context) (*flag.FlagSet, error) {
 	// As in github:sfomuseum/go-sfomuseum-mapshaper and github:sfomuseum/docker-sfomuseum-mapshaper
 	// One day the functionality exposed here will be ported to Go and this won't be necessary
 
-	fs.StringVar(&mapshaper_server, "mapshaper-server", "http://localhost:8080", "A valid HTTP URI pointing to a sfomuseum/go-sfomuseum-mapshaper server endpoint.")
+	fs.StringVar(&mapshaper_server, "mapshaper-server", "", "A valid HTTP URI pointing to a sfomuseum/go-sfomuseum-mapshaper server endpoint.")
 
 	fs.Var(&is_current, "is-current", "One or more existential flags (-1, 0, 1) to filter PIP results.")
 	fs.Var(&is_ceased, "is-ceased", "One or more existential flags (-1, 0, 1) to filter PIP results.")

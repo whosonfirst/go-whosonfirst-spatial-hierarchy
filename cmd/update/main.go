@@ -16,5 +16,4 @@ func main() {
 	if err != nil {
 		logger.Fatalf("Failed to run PIP application, %v", err)
 	}
-
 }
