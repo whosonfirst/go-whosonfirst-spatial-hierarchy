@@ -10,6 +10,7 @@ import (
 	"github.com/whosonfirst/go-whosonfirst-feature/geometry"
 	"github.com/whosonfirst/go-whosonfirst-iterate/v2/iterator"
 	"github.com/whosonfirst/go-whosonfirst-spatial-hierarchy"
+	hierarchy_filter "github.com/whosonfirst/go-whosonfirst-spatial-hierarchy/filter"
 	"github.com/whosonfirst/go-whosonfirst-spatial/database"
 	"github.com/whosonfirst/go-whosonfirst-spatial/filter"
 	wof_writer "github.com/whosonfirst/go-whosonfirst-writer/v2"
@@ -29,7 +30,7 @@ type UpdateApplicationOptions struct {
 	ToIterator         string
 	FromIterator       string
 	SPRFilterInputs    *filter.SPRInputs
-	SPRResultsFunc     hierarchy.FilterSPRResultsFunc                          // This one chooses one result among many (or nil)
+	SPRResultsFunc     hierarchy_filter.FilterSPRResultsFunc                   // This one chooses one result among many (or nil)
 	PIPUpdateFunc      hierarchy.PointInPolygonHierarchyResolverUpdateCallback // This one constructs a map[string]interface{} to update the target record (or not)
 }
 
@@ -46,7 +47,7 @@ type UpdateApplication struct {
 	writer              writer.Writer
 	exporter            export.Exporter
 	spatial_db          database.SpatialDatabase
-	sprResultsFunc      hierarchy.FilterSPRResultsFunc
+	sprResultsFunc      hierarchy_filter.FilterSPRResultsFunc
 	sprFilterInputs     *filter.SPRInputs
 	hierarchyUpdateFunc hierarchy.PointInPolygonHierarchyResolverUpdateCallback
 	logger              *log.Logger
@@ -80,7 +81,7 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet, logger *log.Logger) e
 		ExporterURI:        exporter_uri,
 		SpatialDatabaseURI: spatial_database_uri,
 		MapshaperServerURI: mapshaper_server,
-		SPRResultsFunc:     hierarchy.FirstButForgivingSPRResultsFunc, // sudo make me configurable
+		SPRResultsFunc:     hierarchy_filter.FirstButForgivingSPRResultsFunc, // sudo make me configurable
 		SPRFilterInputs:    inputs,
 		ToIterator:         iterator_uri,
 		FromIterator:       spatial_iterator_uri,

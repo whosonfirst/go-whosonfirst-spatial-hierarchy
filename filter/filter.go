@@ -1,5 +1,6 @@
-package hierarchy
+package filter
 
+// To do: Update to use aaronland/go-roster so these can be defined with a URI-based syntax
 import (
 	"context"
 	"fmt"

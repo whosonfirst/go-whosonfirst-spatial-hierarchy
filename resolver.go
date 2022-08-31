@@ -12,6 +12,7 @@ import (
 	"github.com/whosonfirst/go-whosonfirst-feature/properties"
 	"github.com/whosonfirst/go-whosonfirst-placetypes"
 	wof_reader "github.com/whosonfirst/go-whosonfirst-reader"
+	hierarchy_filter "github.com/whosonfirst/go-whosonfirst-spatial-hierarchy/filter"
 	"github.com/whosonfirst/go-whosonfirst-spatial/database"
 	"github.com/whosonfirst/go-whosonfirst-spatial/filter"
 	"github.com/whosonfirst/go-whosonfirst-spatial/geo"
@@ -90,7 +91,7 @@ func NewPointInPolygonHierarchyResolver(ctx context.Context, spatial_db database
 }
 
 // PointInPolygonAndUpdate will ...
-func (t *PointInPolygonHierarchyResolver) PointInPolygonAndUpdate(ctx context.Context, inputs *filter.SPRInputs, results_cb FilterSPRResultsFunc, update_cb PointInPolygonHierarchyResolverUpdateCallback, body []byte) (bool, []byte, error) {
+func (t *PointInPolygonHierarchyResolver) PointInPolygonAndUpdate(ctx context.Context, inputs *filter.SPRInputs, results_cb hierarchy_filter.FilterSPRResultsFunc, update_cb PointInPolygonHierarchyResolverUpdateCallback, body []byte) (bool, []byte, error) {
 
 	possible, err := t.PointInPolygon(ctx, inputs, body)
 
