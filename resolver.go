@@ -22,7 +22,9 @@ import (
 // PointInPolygonHierarchyResolver provides methods for constructing a hierarchy of ancestors
 // for a given point, following rules established by the Who's On First project.
 type PointInPolygonHierarchyResolver struct {
+	// Database is the `database.SpatialDatabase` instance used to perform point-in-polygon requests.
 	Database  database.SpatialDatabase
+	// Mapshaper is an optional `mapshaper.Client` instance used to derive centroids used in point-in-polygon requests.
 	Mapshaper *mapshaper.Client
 }
 
@@ -49,13 +51,13 @@ func DefaultPointInPolygonHierarchyResolverUpdateCallback() PointInPolygonHierar
 			parent_id, err := strconv.ParseInt(parent_spr.Id(), 10, 64)
 
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("Failed to parse ID (%s), %w", parent_spr.Id(), err)
 			}
 
 			parent_f, err := wof_reader.LoadBytes(ctx, r, parent_id)
 
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("Failed to load body for %d, %w", parent_id, err)
 			}
 
 			parent_hierarchy := properties.Hierarchies(parent_f)
@@ -149,7 +151,7 @@ func (t *PointInPolygonHierarchyResolver) PointInPolygon(ctx context.Context, in
 	centroid, err := t.PointInPolygonCentroid(ctx, body)
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Failed to derive centroid, %w", err)
 	}
 
 	lon := centroid.X()
@@ -206,7 +208,7 @@ func (t *PointInPolygonHierarchyResolver) PointInPolygonCentroid(ctx context.Con
 	f, err := geojson.UnmarshalFeature(body)
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Failed to unmarshal featur body, %w", err)
 	}
 
 	// First see whether there are exsiting reverse-geocoding properties
