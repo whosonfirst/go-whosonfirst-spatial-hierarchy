@@ -10,7 +10,7 @@ import (
 // FilterSPRResultsFunc defines a custom function for deriving a single `spr.StandardPlacesResult` from a list of `spr.StandardPlacesResult` instances.
 type FilterSPRResultsFunc func(context.Context, reader.Reader, []byte, []spr.StandardPlacesResult) (spr.StandardPlacesResult, error)
 
-// FirstButForgivingSPRResultsFunc returns the first record in 'possible' or nil. 
+// FirstButForgivingSPRResultsFunc returns the first record in 'possible' or nil.
 func FirstButForgivingSPRResultsFunc(ctx context.Context, r reader.Reader, body []byte, possible []spr.StandardPlacesResult) (spr.StandardPlacesResult, error) {
 
 	if len(possible) == 0 {

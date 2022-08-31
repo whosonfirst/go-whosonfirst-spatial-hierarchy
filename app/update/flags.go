@@ -26,7 +26,7 @@ var is_deprecated multi.MultiInt64
 var is_superseded multi.MultiInt64
 var is_superseding multi.MultiInt64
 
-func NewUpdateApplicationFlagSet(ctx context.Context) (*flag.FlagSet, error) {
+func DefaultFlagSet(ctx context.Context) (*flag.FlagSet, error) {
 
 	fs := flagset.NewFlagSet("pip")
 

@@ -15,7 +15,7 @@ import (
 	wof_writer "github.com/whosonfirst/go-whosonfirst-writer/v2"
 	"github.com/whosonfirst/go-writer/v2"
 	"io"
-	_ "log"
+	"log"
 )
 
 type UpdateApplicationOptions struct {
@@ -49,9 +49,21 @@ type UpdateApplication struct {
 	sprResultsFunc      hierarchy.FilterSPRResultsFunc
 	sprFilterInputs     *filter.SPRInputs
 	hierarchyUpdateFunc hierarchy.PointInPolygonHierarchyResolverUpdateCallback
+	logger              *log.Logger
 }
 
-func NewUpdateApplicationOptionsFromFlagSet(ctx context.Context, fs *flag.FlagSet) (*UpdateApplicationOptions, *UpdateApplicationPaths, error) {
+func Run(ctx context.Context, logger *log.Logger) error {
+
+	fs, err := DefaultFlagSet(ctx)
+
+	if err != nil {
+		fmt.Errorf("Failed to create application flag set, %w", err)
+	}
+
+	return RunWithFlagSet(ctx, fs, logger)
+}
+
+func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet, logger *log.Logger) error {
 
 	flagset.Parse(fs)
 
@@ -81,11 +93,6 @@ func NewUpdateApplicationOptionsFromFlagSet(ctx context.Context, fs *flag.FlagSe
 		From: spatial_paths,
 	}
 
-	return opts, paths, nil
-}
-
-func NewUpdateApplication(ctx context.Context, opts *UpdateApplicationOptions) (*UpdateApplication, error) {
-
 	var ex export.Exporter
 	var wr writer.Writer
 	var spatial_db database.SpatialDatabase
@@ -97,7 +104,7 @@ func NewUpdateApplication(ctx context.Context, opts *UpdateApplicationOptions) (
 		_ex, err := export.NewExporter(ctx, opts.ExporterURI)
 
 		if err != nil {
-			return nil, fmt.Errorf("Failed to create exporter for '%s', %v", opts.ExporterURI, err)
+			return fmt.Errorf("Failed to create exporter for '%s', %v", opts.ExporterURI, err)
 		}
 
 		ex = _ex
@@ -109,7 +116,7 @@ func NewUpdateApplication(ctx context.Context, opts *UpdateApplicationOptions) (
 		_wr, err := writer.NewWriter(ctx, opts.WriterURI)
 
 		if err != nil {
-			return nil, fmt.Errorf("Failed to create writer for '%s', %v", opts.WriterURI, err)
+			return fmt.Errorf("Failed to create writer for '%s', %v", opts.WriterURI, err)
 		}
 
 		wr = _wr
@@ -118,11 +125,11 @@ func NewUpdateApplication(ctx context.Context, opts *UpdateApplicationOptions) (
 	if opts.SpatialDatabase != nil {
 		spatial_db = opts.SpatialDatabase
 	} else {
-		
+
 		_db, err := database.NewSpatialDatabase(ctx, opts.SpatialDatabaseURI)
 
 		if err != nil {
-			return nil, fmt.Errorf("Failed to create spatial database for '%s', %v", opts.SpatialDatabaseURI, err)
+			return fmt.Errorf("Failed to create spatial database for '%s', %v", opts.SpatialDatabaseURI, err)
 		}
 
 		spatial_db = _db
@@ -141,17 +148,17 @@ func NewUpdateApplication(ctx context.Context, opts *UpdateApplicationOptions) (
 		client, err := mapshaper.NewClient(ctx, opts.MapshaperServerURI)
 
 		if err != nil {
-			return nil, fmt.Errorf("Failed to create mapshaper client for '%s', %v", opts.MapshaperServerURI, err)
+			return fmt.Errorf("Failed to create mapshaper client for '%s', %v", opts.MapshaperServerURI, err)
 		}
 
 		ok, err := client.Ping()
 
 		if err != nil {
-			return nil, fmt.Errorf("Failed to ping '%s', %v", opts.MapshaperServerURI, err)
+			return fmt.Errorf("Failed to ping '%s', %v", opts.MapshaperServerURI, err)
 		}
 
 		if !ok {
-			return nil, fmt.Errorf("'%s' returned false", opts.MapshaperServerURI)
+			return fmt.Errorf("'%s' returned false", opts.MapshaperServerURI)
 		}
 
 		ms_client = client
@@ -166,7 +173,7 @@ func NewUpdateApplication(ctx context.Context, opts *UpdateApplicationOptions) (
 	tool, err := hierarchy.NewPointInPolygonHierarchyResolver(ctx, spatial_db, ms_client)
 
 	if err != nil {
-		return nil, fmt.Errorf("Failed to create PIP tool, %v", err)
+		return fmt.Errorf("Failed to create PIP tool, %v", err)
 	}
 
 	app := &UpdateApplication{
@@ -179,9 +186,10 @@ func NewUpdateApplication(ctx context.Context, opts *UpdateApplicationOptions) (
 		sprFilterInputs:     opts.SPRFilterInputs,
 		sprResultsFunc:      opts.SPRResultsFunc,
 		hierarchyUpdateFunc: update_cb,
+		logger:              logger,
 	}
 
-	return app, nil
+	return app.Run(ctx, paths)
 }
 
 func (app *UpdateApplication) Run(ctx context.Context, paths *UpdateApplicationPaths) error {

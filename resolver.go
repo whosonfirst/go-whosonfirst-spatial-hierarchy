@@ -23,7 +23,7 @@ import (
 // for a given point, following rules established by the Who's On First project.
 type PointInPolygonHierarchyResolver struct {
 	// Database is the `database.SpatialDatabase` instance used to perform point-in-polygon requests.
-	Database  database.SpatialDatabase
+	Database database.SpatialDatabase
 	// Mapshaper is an optional `mapshaper.Client` instance used to derive centroids used in point-in-polygon requests.
 	Mapshaper *mapshaper.Client
 }
