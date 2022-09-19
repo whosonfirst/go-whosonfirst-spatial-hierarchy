@@ -16,8 +16,8 @@ require (
 	github.com/whosonfirst/go-whosonfirst-spatial v0.3.6
 	github.com/whosonfirst/go-whosonfirst-spatial-rtree v0.2.2
 	github.com/whosonfirst/go-whosonfirst-spr/v2 v2.2.1
-	github.com/whosonfirst/go-whosonfirst-writer/v2 v2.0.2
-	github.com/whosonfirst/go-writer/v2 v2.0.0
+	github.com/whosonfirst/go-whosonfirst-writer/v3 v3.0.0
+	github.com/whosonfirst/go-writer/v3 v3.0.0
 )
 
 require (
@@ -56,7 +56,7 @@ require (
 	github.com/whosonfirst/go-whosonfirst-id v1.0.0 // indirect
 	github.com/whosonfirst/go-whosonfirst-sources v0.1.0 // indirect
 	github.com/whosonfirst/go-whosonfirst-uri v1.2.0 // indirect
-	github.com/whosonfirst/go-writer v1.0.1 // indirect
+	github.com/whosonfirst/go-writer/v2 v2.0.0 // indirect
 	github.com/whosonfirst/walk v0.0.1 // indirect
 	github.com/whosonfirst/warning v0.1.1 // indirect
 	go.uber.org/ratelimit v0.2.0 // indirect

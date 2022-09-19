@@ -10,8 +10,8 @@ import (
 	hierarchy_filter "github.com/whosonfirst/go-whosonfirst-spatial-hierarchy/filter"
 	"github.com/whosonfirst/go-whosonfirst-spatial/database"
 	"github.com/whosonfirst/go-whosonfirst-spatial/filter"
-	wof_writer "github.com/whosonfirst/go-whosonfirst-writer/v2"
-	"github.com/whosonfirst/go-writer/v2"
+	wof_writer "github.com/whosonfirst/go-whosonfirst-writer/v3"
+	"github.com/whosonfirst/go-writer/v3"
 	"io"
 	"log"
 )
@@ -169,7 +169,7 @@ func (app *UpdateApplication) UpdateFeature(ctx context.Context, body []byte) (b
 	return app.tool.PointInPolygonAndUpdate(ctx, app.sprFilterInputs, app.sprResultsFunc, app.hierarchyUpdateFunc, body)
 }
 
-// PublishFeature exports 'body' using the `whosonfirst/go-writer/v2` instance associated with 'app'.
+// PublishFeature exports 'body' using the `whosonfirst/go-writer/v3` instance associated with 'app'.
 func (app *UpdateApplication) PublishFeature(ctx context.Context, body []byte) ([]byte, error) {
 
 	new_body, err := app.exporter.Export(ctx, body)
