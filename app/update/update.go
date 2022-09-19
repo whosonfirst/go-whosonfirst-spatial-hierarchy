@@ -15,7 +15,7 @@ import (
 	hierarchy_filter "github.com/whosonfirst/go-whosonfirst-spatial-hierarchy/filter"
 	"github.com/whosonfirst/go-whosonfirst-spatial/database"
 	"github.com/whosonfirst/go-whosonfirst-spatial/filter"
-	"github.com/whosonfirst/go-writer/v2"
+	"github.com/whosonfirst/go-writer/v3"
 	"log"
 )
 
