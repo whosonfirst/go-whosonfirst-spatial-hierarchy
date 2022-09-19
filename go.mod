@@ -4,16 +4,16 @@ go 1.18
 
 require (
 	github.com/paulmach/orb v0.7.1
-	github.com/sfomuseum/go-flags v0.8.3
+	github.com/sfomuseum/go-flags v0.9.0
 	github.com/sfomuseum/go-sfomuseum-mapshaper v0.0.1
-	github.com/tidwall/gjson v1.14.2
+	github.com/tidwall/gjson v1.14.3
 	github.com/whosonfirst/go-reader v1.0.1
-	github.com/whosonfirst/go-whosonfirst-export/v2 v2.5.0
+	github.com/whosonfirst/go-whosonfirst-export/v2 v2.6.0
 	github.com/whosonfirst/go-whosonfirst-feature v0.0.24
-	github.com/whosonfirst/go-whosonfirst-iterate/v2 v2.1.0
+	github.com/whosonfirst/go-whosonfirst-iterate/v2 v2.3.0
 	github.com/whosonfirst/go-whosonfirst-placetypes v0.3.0
 	github.com/whosonfirst/go-whosonfirst-reader v1.0.1
-	github.com/whosonfirst/go-whosonfirst-spatial v0.3.6
+	github.com/whosonfirst/go-whosonfirst-spatial v0.3.7
 	github.com/whosonfirst/go-whosonfirst-spatial-rtree v0.2.2
 	github.com/whosonfirst/go-whosonfirst-spr/v2 v2.2.1
 	github.com/whosonfirst/go-whosonfirst-writer/v3 v3.0.0
@@ -56,7 +56,6 @@ require (
 	github.com/whosonfirst/go-whosonfirst-id v1.0.0 // indirect
 	github.com/whosonfirst/go-whosonfirst-sources v0.1.0 // indirect
 	github.com/whosonfirst/go-whosonfirst-uri v1.2.0 // indirect
-	github.com/whosonfirst/go-writer/v2 v2.0.0 // indirect
 	github.com/whosonfirst/walk v0.0.1 // indirect
 	github.com/whosonfirst/warning v0.1.1 // indirect
 	go.uber.org/ratelimit v0.2.0 // indirect
