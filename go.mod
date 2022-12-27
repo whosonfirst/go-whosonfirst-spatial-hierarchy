@@ -8,14 +8,14 @@ require (
 	github.com/sfomuseum/go-sfomuseum-mapshaper v0.0.1
 	github.com/tidwall/gjson v1.14.4
 	github.com/whosonfirst/go-reader v1.0.2
-	github.com/whosonfirst/go-whosonfirst-export/v2 v2.6.0
-	github.com/whosonfirst/go-whosonfirst-feature v0.0.24
+	github.com/whosonfirst/go-whosonfirst-export/v2 v2.6.1
+	github.com/whosonfirst/go-whosonfirst-feature v0.0.25
 	github.com/whosonfirst/go-whosonfirst-iterate/v2 v2.3.1
-	github.com/whosonfirst/go-whosonfirst-placetypes v0.4.0
+	github.com/whosonfirst/go-whosonfirst-placetypes v0.4.2
 	github.com/whosonfirst/go-whosonfirst-reader v1.0.1
-	github.com/whosonfirst/go-whosonfirst-spatial v0.4.0
-	github.com/whosonfirst/go-whosonfirst-spatial-rtree v0.2.4
-	github.com/whosonfirst/go-whosonfirst-spr/v2 v2.3.1
+	github.com/whosonfirst/go-whosonfirst-spatial v0.5.4
+	github.com/whosonfirst/go-whosonfirst-spatial-rtree v0.2.5
+	github.com/whosonfirst/go-whosonfirst-spr/v2 v2.3.3
 	github.com/whosonfirst/go-whosonfirst-writer/v3 v3.0.0
 	github.com/whosonfirst/go-writer/v3 v3.1.0
 )
@@ -48,7 +48,7 @@ require (
 	github.com/whosonfirst/go-whosonfirst-crawl v0.2.1 // indirect
 	github.com/whosonfirst/go-whosonfirst-flags v0.4.4 // indirect
 	github.com/whosonfirst/go-whosonfirst-format v0.4.1 // indirect
-	github.com/whosonfirst/go-whosonfirst-id v1.0.0 // indirect
+	github.com/whosonfirst/go-whosonfirst-id v1.2.0 // indirect
 	github.com/whosonfirst/go-whosonfirst-sources v0.1.0 // indirect
 	github.com/whosonfirst/go-whosonfirst-uri v1.2.0 // indirect
 	github.com/whosonfirst/walk v0.0.1 // indirect
