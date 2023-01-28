@@ -57,8 +57,8 @@ github.com/patrickmn/go-cache v2.1.0+incompatible/go.mod h1:3Qf8kWWT7OJRJbdiICTK
 github.com/paulmach/orb v0.2.2/go.mod h1:FkcWtplUAIVqAuhAOV2d3rpbnQyliDOjOcLW9dUrfdU=
 github.com/paulmach/orb v0.6.0/go.mod h1:FWRlTgl88VI1RBx/MkrwWDRhQ96ctqMCh8boXhmqB/A=
 github.com/paulmach/orb v0.7.0/go.mod h1:FWRlTgl88VI1RBx/MkrwWDRhQ96ctqMCh8boXhmqB/A=
-github.com/paulmach/orb v0.7.1 h1:Zha++Z5OX/l168sqHK3k4z18LDvr+YAO/VjK0ReQ9rU=
-github.com/paulmach/orb v0.7.1/go.mod h1:FWRlTgl88VI1RBx/MkrwWDRhQ96ctqMCh8boXhmqB/A=
+github.com/paulmach/orb v0.8.0 h1:W5XAt5yNPNnhaMNEf0xNSkBMJ1LzOzdk2MRlB6EN0Vs=
+github.com/paulmach/orb v0.8.0/go.mod h1:FWRlTgl88VI1RBx/MkrwWDRhQ96ctqMCh8boXhmqB/A=
 github.com/paulmach/protoscan v0.2.1-0.20210522164731-4e53c6875432/go.mod h1:2sV+uZ/oQh66m4XJVZm5iqUZ62BN88Ex1E+TTS0nLzI=
 github.com/paulmach/protoscan v0.2.1/go.mod h1:SpcSwydNLrxUGSDvXvO0P7g7AuhJ7lcKfDlhJCDw2gY=
 github.com/pkg/errors v0.8.0/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
@@ -102,11 +102,11 @@ github.com/whosonfirst/go-sanitize v0.1.0 h1:ygSqCnakwdzH/m8UEa15zXGDsoo5/JJeRkg
 github.com/whosonfirst/go-sanitize v0.1.0/go.mod h1:p/emgbafMM0p5iVAz2XWwecYPl06Tw4Jos9rhTKIrt8=
 github.com/whosonfirst/go-whosonfirst-crawl v0.2.1 h1:nNG7r7/4MaII/NM8Df2oqgfgVNBDoIKlseleoX1vw1Q=
 github.com/whosonfirst/go-whosonfirst-crawl v0.2.1/go.mod h1:MTD1TCgAkXlAtysPU98ylrz9Y5+ZCfRrsrBnRyiH/t8=
-github.com/whosonfirst/go-whosonfirst-export/v2 v2.6.1 h1:u2/HPnz8OwlTIeyuFogDLKMwHVg9CgNHvy5cEEynlxU=
-github.com/whosonfirst/go-whosonfirst-export/v2 v2.6.1/go.mod h1:nOKxHWpoM31OvZoNxzPCbhK+CnMgTVsXnZvYNK/jwCA=
+github.com/whosonfirst/go-whosonfirst-export/v2 v2.6.2 h1:lGOISEtQCjot76K+1kMLGG7i34YZYdSKCVV8YO3g4Eo=
+github.com/whosonfirst/go-whosonfirst-export/v2 v2.6.2/go.mod h1:PqERdOHiJifPrD7Iouv0ttuTsSXqCIIBC/+uNjrgylQ=
 github.com/whosonfirst/go-whosonfirst-feature v0.0.23/go.mod h1:3cvRigFFG2a99M64lZzfy5amHacWu8Os5fXZdGjPnLM=
-github.com/whosonfirst/go-whosonfirst-feature v0.0.25 h1:6s2to+aWB9Fo+IcwSvsB2UiuymJPKSe8g0TwuRasLhE=
-github.com/whosonfirst/go-whosonfirst-feature v0.0.25/go.mod h1:JTauqAjTuZDfOTHxv5hFUzknF0NGgxvHTT5maTej9Co=
+github.com/whosonfirst/go-whosonfirst-feature v0.0.26 h1:Dba+7aNMzxAaSVh9WzlPdrYhwT8T03cjNANjZvhcNsY=
+github.com/whosonfirst/go-whosonfirst-feature v0.0.26/go.mod h1:ntGT7tkg89WyEalg+Aocl0R27tPx2wBp7Prfx9a5tUg=
 github.com/whosonfirst/go-whosonfirst-flags v0.4.3/go.mod h1:pL17Ryo60FH8RYaQRgfu5XnxhrNRK3x+rn03TYD6Gc8=
 github.com/whosonfirst/go-whosonfirst-flags v0.4.4 h1:pwUnE8btx4Po6N5+uq0IrKVF0WraY5YW3tc3saIDg3A=
 github.com/whosonfirst/go-whosonfirst-flags v0.4.4/go.mod h1:C9X7vQvNR/u55AfOHYUT8o7dRACWV++ZV4B0kylnIaY=

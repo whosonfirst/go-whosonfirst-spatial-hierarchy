@@ -3,13 +3,13 @@ module github.com/whosonfirst/go-whosonfirst-spatial-hierarchy
 go 1.18
 
 require (
-	github.com/paulmach/orb v0.7.1
+	github.com/paulmach/orb v0.8.0
 	github.com/sfomuseum/go-flags v0.10.0
 	github.com/sfomuseum/go-sfomuseum-mapshaper v0.0.1
 	github.com/tidwall/gjson v1.14.4
 	github.com/whosonfirst/go-reader v1.0.2
-	github.com/whosonfirst/go-whosonfirst-export/v2 v2.6.1
-	github.com/whosonfirst/go-whosonfirst-feature v0.0.25
+	github.com/whosonfirst/go-whosonfirst-export/v2 v2.6.2
+	github.com/whosonfirst/go-whosonfirst-feature v0.0.26
 	github.com/whosonfirst/go-whosonfirst-iterate/v2 v2.3.1
 	github.com/whosonfirst/go-whosonfirst-placetypes v0.4.2
 	github.com/whosonfirst/go-whosonfirst-reader v1.0.1
