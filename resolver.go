@@ -3,6 +3,8 @@ package hierarchy
 import (
 	"context"
 	"fmt"
+	"strconv"
+
 	"github.com/paulmach/orb"
 	"github.com/paulmach/orb/geojson"
 	"github.com/sfomuseum/go-sfomuseum-mapshaper"
@@ -17,7 +19,6 @@ import (
 	"github.com/whosonfirst/go-whosonfirst-spatial/filter"
 	"github.com/whosonfirst/go-whosonfirst-spatial/geo"
 	"github.com/whosonfirst/go-whosonfirst-spr/v2"
-	"strconv"
 )
 
 // PointInPolygonHierarchyResolver provides methods for constructing a hierarchy of ancestors
@@ -27,6 +28,9 @@ type PointInPolygonHierarchyResolver struct {
 	Database database.SpatialDatabase
 	// Mapshaper is an optional `mapshaper.Client` instance used to derive centroids used in point-in-polygon requests.
 	Mapshaper *mapshaper.Client
+	// placetypesSpecification is the `placetypes.WOFPlacetypeSpecification` instance to use for placetype-related operations.
+	placetypesSpecification *placetypes.WOFPlacetypeSpecification
+	placetypeProperty       string
 	// reader is the `reader.Reader` instance used to retrieve ancestor records. By default it is the same as `Database` but can be assigned
 	// explicitly using the `SetReader` method.
 	reader reader.Reader
@@ -80,15 +84,43 @@ func DefaultPointInPolygonHierarchyResolverUpdateCallback() PointInPolygonHierar
 	return fn
 }
 
+type PointInPolygonHierarchyResolverOptions struct {
+	// Database is the `database.SpatialDatabase` instance used to perform point-in-polygon requests.
+	Database database.SpatialDatabase
+	// Mapshaper is an optional `mapshaper.Client` instance used to derive centroids used in point-in-polygon requests.
+	Mapshaper *mapshaper.Client
+	// PlacetypesSpecification is the `placetypes.WOFPlacetypeSpecification` instance to use for placetype-related operations.
+	PlacetypesSpecification *placetypes.WOFPlacetypeSpecification
+	PlacetypeProperty       string
+}
+
 // NewPointInPolygonHierarchyResolver returns a `PointInPolygonHierarchyResolver` instance for 'spatial_db' and 'ms_client'.
 // The former is used to perform point in polygon operations and the latter is used to determine a "reverse geocoding" centroid
 // to use for point-in-polygon operations.
-func NewPointInPolygonHierarchyResolver(ctx context.Context, spatial_db database.SpatialDatabase, ms_client *mapshaper.Client) (*PointInPolygonHierarchyResolver, error) {
+func NewPointInPolygonHierarchyResolver(ctx context.Context, opts *PointInPolygonHierarchyResolverOptions) (*PointInPolygonHierarchyResolver, error) {
+
+	placetype_spec, err := placetypes.DefaultWOFPlacetypeSpecification()
+
+	if err != nil {
+		return nil, fmt.Errorf("Failed to create default placetypes specification, %w", err)
+	}
+
+	placetype_prop := "wof:placetype"
+
+	if opts.PlacetypesSpecification != nil {
+		placetype_spec = opts.PlacetypesSpecification
+	}
+
+	if opts.PlacetypeProperty != "" {
+		placetype_prop = opts.PlacetypeProperty
+	}
 
 	t := &PointInPolygonHierarchyResolver{
-		Database:  spatial_db,
-		Mapshaper: ms_client,
-		reader:    spatial_db,
+		Database:                opts.Database,
+		Mapshaper:               opts.Mapshaper,
+		placetypesSpecification: placetype_spec,
+		placetypeProperty:       placetype_prop,
+		reader:                  opts.Database,
 	}
 
 	return t, nil
@@ -139,15 +171,17 @@ func (t *PointInPolygonHierarchyResolver) PointInPolygonAndUpdate(ctx context.Co
 // from if `wof:placetype=custom`.
 func (t *PointInPolygonHierarchyResolver) PointInPolygon(ctx context.Context, inputs *filter.SPRInputs, body []byte) ([]spr.StandardPlacesResult, error) {
 
-	pt_rsp := gjson.GetBytes(body, "properties.wof:placetype")
+	pt_path := fmt.Sprintf("properties.%s", t.placetypeProperty)
+
+	pt_rsp := gjson.GetBytes(body, pt_path)
 
 	if !pt_rsp.Exists() {
-		return nil, fmt.Errorf("Missing 'wof:placetype' property")
+		return nil, fmt.Errorf("Missing %s property", pt_path)
 	}
 
 	pt_str := pt_rsp.String()
 
-	pt, err := placetypes.GetPlacetypeByName(pt_str)
+	pt, err := t.placetypesSpecification.GetPlacetypeByName(pt_str)
 
 	if err != nil {
 		return nil, fmt.Errorf("Failed to create new placetype for '%s', %v", pt_str, err)
@@ -155,7 +189,7 @@ func (t *PointInPolygonHierarchyResolver) PointInPolygon(ctx context.Context, in
 
 	roles := placetypes.AllRoles()
 
-	ancestors := placetypes.AncestorsForRoles(pt, roles)
+	ancestors := t.placetypesSpecification.AncestorsForRoles(pt, roles)
 
 	centroid, err := t.PointInPolygonCentroid(ctx, body)
 

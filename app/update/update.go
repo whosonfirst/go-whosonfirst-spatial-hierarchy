@@ -137,7 +137,12 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet, logger *log.Logger) e
 		update_cb = hierarchy.DefaultPointInPolygonHierarchyResolverUpdateCallback()
 	}
 
-	tool, err := hierarchy.NewPointInPolygonHierarchyResolver(ctx, spatial_db, ms_client)
+	resolver_opts := &hierarchy.PointInPolygonHierarchyResolverOptions{
+		Database:  spatial_db,
+		Mapshaper: ms_client,
+	}
+
+	resolver, err := hierarchy.NewPointInPolygonHierarchyResolver(ctx, resolver_opts)
 
 	if err != nil {
 		return fmt.Errorf("Failed to create PIP tool, %v", err)
@@ -147,7 +152,7 @@ func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet, logger *log.Logger) e
 		to:                  opts.ToIterator,
 		from:                opts.FromIterator,
 		spatial_db:          spatial_db,
-		tool:                tool,
+		tool:                resolver,
 		exporter:            ex,
 		writer:              wr,
 		sprFilterInputs:     opts.SPRFilterInputs,
