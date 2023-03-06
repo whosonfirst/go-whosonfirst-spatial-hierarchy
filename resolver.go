@@ -196,6 +196,8 @@ func (t *PointInPolygonHierarchyResolver) PointInPolygon(ctx context.Context, in
 
 		inputs.Placetypes = []string{a.Name}
 
+		// FIX ME...
+		
 		spr_filter, err := filter.NewSPRFilterFromInputs(inputs)
 
 		if err != nil {
