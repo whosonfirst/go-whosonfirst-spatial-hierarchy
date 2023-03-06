@@ -27,10 +27,8 @@ type PointInPolygonHierarchyResolver struct {
 	// Database is the `database.SpatialDatabase` instance used to perform point-in-polygon requests.
 	Database database.SpatialDatabase
 	// Mapshaper is an optional `mapshaper.Client` instance used to derive centroids used in point-in-polygon requests.
-	Mapshaper *mapshaper.Client
-	// placetypesSpecification is the `placetypes.WOFPlacetypeSpecification` instance to use for placetype-related operations.
-	placetypesSpecification *placetypes.WOFPlacetypeSpecification
-	placetypeProperty       string
+	Mapshaper     *mapshaper.Client
+	PlacetypesFoo placetypes.Foo
 	// reader is the `reader.Reader` instance used to retrieve ancestor records. By default it is the same as `Database` but can be assigned
 	// explicitly using the `SetReader` method.
 	reader reader.Reader
@@ -88,10 +86,8 @@ type PointInPolygonHierarchyResolverOptions struct {
 	// Database is the `database.SpatialDatabase` instance used to perform point-in-polygon requests.
 	Database database.SpatialDatabase
 	// Mapshaper is an optional `mapshaper.Client` instance used to derive centroids used in point-in-polygon requests.
-	Mapshaper *mapshaper.Client
-	// PlacetypesSpecification is the `placetypes.WOFPlacetypeSpecification` instance to use for placetype-related operations.
-	PlacetypesSpecification *placetypes.WOFPlacetypeSpecification
-	PlacetypeProperty       string
+	Mapshaper     *mapshaper.Client
+	PlacetypesFoo placetypes.Foo
 }
 
 // NewPointInPolygonHierarchyResolver returns a `PointInPolygonHierarchyResolver` instance for 'spatial_db' and 'ms_client'.
@@ -99,28 +95,11 @@ type PointInPolygonHierarchyResolverOptions struct {
 // to use for point-in-polygon operations.
 func NewPointInPolygonHierarchyResolver(ctx context.Context, opts *PointInPolygonHierarchyResolverOptions) (*PointInPolygonHierarchyResolver, error) {
 
-	placetype_spec, err := placetypes.DefaultWOFPlacetypeSpecification()
-
-	if err != nil {
-		return nil, fmt.Errorf("Failed to create default placetypes specification, %w", err)
-	}
-
-	placetype_prop := "wof:placetype"
-
-	if opts.PlacetypesSpecification != nil {
-		placetype_spec = opts.PlacetypesSpecification
-	}
-
-	if opts.PlacetypeProperty != "" {
-		placetype_prop = opts.PlacetypeProperty
-	}
-
 	t := &PointInPolygonHierarchyResolver{
-		Database:                opts.Database,
-		Mapshaper:               opts.Mapshaper,
-		placetypesSpecification: placetype_spec,
-		placetypeProperty:       placetype_prop,
-		reader:                  opts.Database,
+		Database:      opts.Database,
+		Mapshaper:     opts.Mapshaper,
+		PlacetypesFoo: opts.PlacetypesFoo,
+		reader:        opts.Database,
 	}
 
 	return t, nil
@@ -171,7 +150,10 @@ func (t *PointInPolygonHierarchyResolver) PointInPolygonAndUpdate(ctx context.Co
 // from if `wof:placetype=custom`.
 func (t *PointInPolygonHierarchyResolver) PointInPolygon(ctx context.Context, inputs *filter.SPRInputs, body []byte) ([]spr.StandardPlacesResult, error) {
 
-	pt_path := fmt.Sprintf("properties.%s", t.placetypeProperty)
+	pt_spec := t.PlacetypesFoo.Specification()
+	pt_prop := t.PlacetypesFoo.Property()
+
+	pt_path := fmt.Sprintf("properties.%s", pt_prop)
 
 	pt_rsp := gjson.GetBytes(body, pt_path)
 
@@ -181,7 +163,7 @@ func (t *PointInPolygonHierarchyResolver) PointInPolygon(ctx context.Context, in
 
 	pt_str := pt_rsp.String()
 
-	pt, err := t.placetypesSpecification.GetPlacetypeByName(pt_str)
+	pt, err := pt_spec.GetPlacetypeByName(pt_str)
 
 	if err != nil {
 		return nil, fmt.Errorf("Failed to create new placetype for '%s', %v", pt_str, err)
@@ -189,7 +171,7 @@ func (t *PointInPolygonHierarchyResolver) PointInPolygon(ctx context.Context, in
 
 	roles := placetypes.AllRoles()
 
-	ancestors := t.placetypesSpecification.AncestorsForRoles(pt, roles)
+	ancestors := pt_spec.AncestorsForRoles(pt, roles)
 
 	centroid, err := t.PointInPolygonCentroid(ctx, body)
 
