@@ -31,6 +31,7 @@ type PointInPolygonHierarchyResolverOptions struct {
 	Mapshaper *mapshaper.Client
 	// PlacetypesDefinition is an optional `go-whosonfirst-placetypes.Definition` instance used to resolve custom or bespoke placetypes.
 	PlacetypesDefinition placetypes.Definition
+	// Logger is an optional `log.Logger` instance for logging feedback.
 	Logger               *log.Logger
 }
 
