@@ -28,7 +28,8 @@ type PointInPolygonHierarchyResolverOptions struct {
 	// Database is the `database.SpatialDatabase` instance used to perform point-in-polygon requests.
 	Database database.SpatialDatabase
 	// Mapshaper is an optional `mapshaper.Client` instance used to derive centroids used in point-in-polygon requests.
-	Mapshaper            *mapshaper.Client
+	Mapshaper *mapshaper.Client
+	// PlacetypesDefinition is an optional `go-whosonfirst-placetypes.Definition` instance used to resolve custom or bespoke placetypes.
 	PlacetypesDefinition placetypes.Definition
 	Logger               *log.Logger
 }
@@ -39,11 +40,13 @@ type PointInPolygonHierarchyResolver struct {
 	// Database is the `database.SpatialDatabase` instance used to perform point-in-polygon requests.
 	Database database.SpatialDatabase
 	// Mapshaper is an optional `mapshaper.Client` instance used to derive centroids used in point-in-polygon requests.
-	Mapshaper            *mapshaper.Client
+	Mapshaper *mapshaper.Client
+	// PlacetypesDefinition is an optional `go-whosonfirst-placetypes.Definition` instance used to resolve custom or bespoke placetypes.
 	PlacetypesDefinition placetypes.Definition
+	// Logger is a `log.Logger` instance for logging feedback. The default logger sends all messages to `io.Discard`.
+	Logger *log.Logger
 	// reader is the `reader.Reader` instance used to retrieve ancestor records. By default it is the same as `Database` but can be assigned
 	// explicitly using the `SetReader` method.
-	Logger *log.Logger
 	reader reader.Reader
 }
 
@@ -101,6 +104,7 @@ func DefaultPointInPolygonHierarchyResolverUpdateCallback() PointInPolygonHierar
 func NewPointInPolygonHierarchyResolver(ctx context.Context, opts *PointInPolygonHierarchyResolverOptions) (*PointInPolygonHierarchyResolver, error) {
 
 	var logger *log.Logger
+	var pt_def placetypes.Definition
 
 	if opts.Logger != nil {
 		logger = opts.Logger
@@ -108,10 +112,25 @@ func NewPointInPolygonHierarchyResolver(ctx context.Context, opts *PointInPolygo
 		logger = log.New(io.Discard, "", 0)
 	}
 
+	if opts.PlacetypesDefinition == nil {
+
+		def, err := placetypes.NewDefinition(ctx, "whosonfirst://")
+
+		if err != nil {
+			return nil, fmt.Errorf("Failed to create whosonfirst:// placetypes definition, %w", err)
+		}
+
+		pt_def = def
+
+	} else {
+
+		pt_def = opts.PlacetypesDefinition
+	}
+
 	t := &PointInPolygonHierarchyResolver{
 		Database:             opts.Database,
 		Mapshaper:            opts.Mapshaper,
-		PlacetypesDefinition: opts.PlacetypesDefinition,
+		PlacetypesDefinition: pt_def,
 		Logger:               logger,
 		reader:               opts.Database,
 	}
@@ -164,9 +183,10 @@ func (t *PointInPolygonHierarchyResolver) PointInPolygonAndUpdate(ctx context.Co
 // from if `wof:placetype=custom`.
 func (t *PointInPolygonHierarchyResolver) PointInPolygon(ctx context.Context, inputs *filter.SPRInputs, body []byte) ([]spr.StandardPlacesResult, error) {
 
-	pt_spec := t.PlacetypesDefinition.Specification()
-	pt_prop := t.PlacetypesDefinition.Property()
-	pt_uri := t.PlacetypesDefinition.URI()
+	pt_def := t.PlacetypesDefinition
+	pt_spec := pt_def.Specification()
+	pt_prop := pt_def.Property()
+	pt_uri := pt_def.URI()
 
 	pt_path := fmt.Sprintf("properties.%s", pt_prop)
 
