@@ -3,6 +3,7 @@ module github.com/whosonfirst/go-whosonfirst-spatial-hierarchy
 go 1.18
 
 require (
+	github.com/aaronland/go-log/v2 v2.0.0
 	github.com/paulmach/orb v0.9.0
 	github.com/sfomuseum/go-flags v0.10.0
 	github.com/sfomuseum/go-sfomuseum-mapshaper v0.0.1
@@ -11,11 +12,11 @@ require (
 	github.com/whosonfirst/go-whosonfirst-export/v2 v2.7.0
 	github.com/whosonfirst/go-whosonfirst-feature v0.0.26
 	github.com/whosonfirst/go-whosonfirst-iterate/v2 v2.3.1
-	github.com/whosonfirst/go-whosonfirst-placetypes v0.6.0
+	github.com/whosonfirst/go-whosonfirst-placetypes v0.7.0
 	github.com/whosonfirst/go-whosonfirst-reader v1.0.1
-	github.com/whosonfirst/go-whosonfirst-spatial v0.5.4
+	github.com/whosonfirst/go-whosonfirst-spatial v0.5.6
 	github.com/whosonfirst/go-whosonfirst-spatial-rtree v0.2.5
-	github.com/whosonfirst/go-whosonfirst-spr/v2 v2.3.3
+	github.com/whosonfirst/go-whosonfirst-spr/v2 v2.3.5
 	github.com/whosonfirst/go-whosonfirst-writer/v3 v3.1.0
 	github.com/whosonfirst/go-writer/v3 v3.1.0
 )
@@ -34,7 +35,7 @@ require (
 	github.com/andres-erbsen/clock v0.0.0-20160526145045-9e14626cd129 // indirect
 	github.com/cenkalti/backoff/v4 v4.1.3 // indirect
 	github.com/dhconnelly/rtreego v1.1.0 // indirect
-	github.com/dominikbraun/graph v0.16.0 // indirect
+	github.com/dominikbraun/graph v0.16.1 // indirect
 	github.com/g8rswimmer/error-chain v1.0.0 // indirect
 	github.com/hashicorp/errwrap v1.0.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
@@ -47,7 +48,7 @@ require (
 	github.com/whosonfirst/go-ioutil v1.0.2 // indirect
 	github.com/whosonfirst/go-sanitize v0.1.0 // indirect
 	github.com/whosonfirst/go-whosonfirst-crawl v0.2.1 // indirect
-	github.com/whosonfirst/go-whosonfirst-flags v0.4.4 // indirect
+	github.com/whosonfirst/go-whosonfirst-flags v0.5.0 // indirect
 	github.com/whosonfirst/go-whosonfirst-format v0.4.1 // indirect
 	github.com/whosonfirst/go-whosonfirst-id v1.2.0 // indirect
 	github.com/whosonfirst/go-whosonfirst-sources v0.1.0 // indirect
