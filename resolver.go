@@ -32,7 +32,7 @@ type PointInPolygonHierarchyResolverOptions struct {
 	// PlacetypesDefinition is an optional `go-whosonfirst-placetypes.Definition` instance used to resolve custom or bespoke placetypes.
 	PlacetypesDefinition placetypes.Definition
 	// Logger is an optional `log.Logger` instance for logging feedback.
-	Logger               *log.Logger
+	Logger *log.Logger
 	// SkipPlacetypeFilter is an optional boolean flag to signal whether or not point-in-polygon operations should be performed using
 	// the list of known ancestors for a given placetype. Default is false.
 	SkipPlacetypeFilter bool
@@ -53,7 +53,7 @@ type PointInPolygonHierarchyResolver struct {
 	// explicitly using the `SetReader` method.
 	reader reader.Reader
 	// skip_placetype_filter is an optional boolean flag to signal whether or not point-in-polygon operations should be performed using
-	// the list of known ancestors for a given placetype. Default is false.	
+	// the list of known ancestors for a given placetype. Default is false.
 	skip_placetype_filter bool
 }
 
@@ -135,11 +135,11 @@ func NewPointInPolygonHierarchyResolver(ctx context.Context, opts *PointInPolygo
 	}
 
 	t := &PointInPolygonHierarchyResolver{
-		Database:             opts.Database,
-		Mapshaper:            opts.Mapshaper,
-		PlacetypesDefinition: pt_def,
-		Logger:               logger,
-		reader:               opts.Database,
+		Database:              opts.Database,
+		Mapshaper:             opts.Mapshaper,
+		PlacetypesDefinition:  pt_def,
+		Logger:                logger,
+		reader:                opts.Database,
 		skip_placetype_filter: opts.SkipPlacetypeFilter,
 	}
 
@@ -201,7 +201,7 @@ func (t *PointInPolygonHierarchyResolver) PointInPolygon(ctx context.Context, in
 	lat := centroid.Y()
 
 	coord, err := geo.NewCoordinate(lon, lat)
-	
+
 	if err != nil {
 		return nil, fmt.Errorf("Failed to create new coordinate, %w", err)
 	}
@@ -231,11 +231,11 @@ func (t *PointInPolygonHierarchyResolver) PointInPolygon(ctx context.Context, in
 		possible := rsp.Results()
 		return possible, nil
 	}
-	
+
 	// Start PIP-ing the list of ancestors - stop at the first match
 
 	possible := make([]spr.StandardPlacesResult, 0)
-	
+
 	pt_def := t.PlacetypesDefinition
 	pt_spec := pt_def.Specification()
 	pt_prop := pt_def.Property()
@@ -260,7 +260,7 @@ func (t *PointInPolygonHierarchyResolver) PointInPolygon(ctx context.Context, in
 	roles := placetypes.AllRoles()
 
 	ancestors := pt_spec.AncestorsForRoles(pt, roles)
-	
+
 	for _, a := range ancestors {
 
 		pt_name := fmt.Sprintf("%s#%s", a.Name, pt_uri)
